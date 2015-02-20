@@ -42,6 +42,7 @@ class GenerateDoctrineRESTCommand extends GenerateDoctrineCrudCommand
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if rest api controller already exist, thus overwriting all generated files'),
                 new InputOption('resource', '', InputOption::VALUE_NONE, 'The object will return with the resource name'),
                 new InputOption('document', '', InputOption::VALUE_NONE, 'Use NelmioApiDocBundle to document the controller'),
+                new InputOption('target-bundle', '', InputOption::VALUE_NONE, 'The bundle where rest controller will be generated'),
             )
         )
             ->setDescription('Generates a REST api based on a Doctrine entity')
@@ -87,6 +88,13 @@ EOT
 
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($bundle, $entity) = $this->parseShortcutNotation($entity);
+        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
+
+        $targetBundle = $bundle;
+        $targetBundleOption = $input->getOption('target-bundle');
+        if (!empty($targetBundleOption)) {
+            $targetBundle = $this->getContainer()->get('kernel')->getBundle($targetBundleOption);
+        }
 
         $format         = "rest";
         $prefix         = $this->getRoutePrefix($input, $entity);
@@ -96,12 +104,11 @@ EOT
 
         $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle) . '\\' . $entity;
         $metadata    = $this->getEntityMetadata($entityClass);
-        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
         $resource    = $input->getOption('resource');
         $document    = $input->getOption('document');
 
-        $generator = $this->getGenerator($bundle);
-        $generator->generate($bundle, $entity, $metadata[0], $prefix, $forceOverwrite, $resource, $document);
+        $generator = $this->getGenerator($targetBundle);
+        $generator->generate($bundle, $entity, $metadata[0], $prefix, $forceOverwrite, $resource, $document, $targetBundle);
 
         $output->writeln('Generating the REST api code: <info>OK</info>');
 
@@ -162,6 +169,19 @@ EOT
 
         $prefix = $questionHelper->ask($input, $output, new Question($questionHelper->getQuestion('Routes prefix', '/' . $prefix), '/' . $prefix));
         $input->setOption('route-prefix', $prefix);
+
+        // target Bundle
+        $output->writeln(
+            array(
+                '',
+                'Bundle under which the REST API will be generated',
+                'default to same bundle as ',
+                '',
+            )
+        );
+
+        $targetBundle = $questionHelper->ask($input, $output, new Question($questionHelper->getQuestion('Target Bundle', '')));
+        $input->setOption('target-bundle', $targetBundle);
 
         // summary
         $output->writeln(

@@ -27,6 +27,7 @@ class DoctrineRESTGenerator extends Generator
     protected $routePrefix;
     protected $routeNamePrefix;
     protected $bundle;
+    protected $targetBundle;
     protected $entity;
     protected $metadata;
     protected $format;
@@ -53,7 +54,7 @@ class DoctrineRESTGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $routePrefix, $forceOverwrite)
+    public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $routePrefix, $forceOverwrite, $targetBundle)
     {
         $this->routePrefix     = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
@@ -69,6 +70,7 @@ class DoctrineRESTGenerator extends Generator
 
         $this->entity   = $entity;
         $this->bundle   = $bundle;
+        $this->targetBundle = $targetBundle;
         $this->metadata = $metadata;
         $this->setFormat('yml');
 
@@ -132,7 +134,7 @@ class DoctrineRESTGenerator extends Generator
      */
     protected function generateControllerClass($forceOverwrite)
     {
-        $dir = $this->bundle->getPath();
+        $dir = $this->targetBundle->getPath();
 
         $parts           = explode('\\', $this->entity);
         $entityClass     = array_pop($parts);
@@ -159,7 +161,7 @@ class DoctrineRESTGenerator extends Generator
                 'bundle'            => $this->bundle->getName(),
                 'entity'            => $this->entity,
                 'entity_class'      => $entityClass,
-                'namespace'         => $this->bundle->getNamespace(),
+                'namespace'         => $this->targetBundle->getNamespace(),
                 'entity_namespace'  => $entityNamespace,
                 'format'            => $this->format,
             )

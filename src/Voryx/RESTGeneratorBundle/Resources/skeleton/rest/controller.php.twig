@@ -3,7 +3,7 @@
 namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
 {% block use_statements %}
-use {{ namespace }}\Entity\{{ entity }};
+use {{ entity_namespace }}\Entity\{{ entity }};
 use {{ namespace }}\Form\{{ entity }}Type;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
