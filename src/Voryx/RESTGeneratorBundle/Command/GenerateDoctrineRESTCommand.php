@@ -42,7 +42,7 @@ class GenerateDoctrineRESTCommand extends GenerateDoctrineCrudCommand
                 new InputOption('overwrite', '', InputOption::VALUE_NONE, 'Do not stop the generation if rest api controller already exist, thus overwriting all generated files'),
                 new InputOption('resource', '', InputOption::VALUE_NONE, 'The object will return with the resource name'),
                 new InputOption('document', '', InputOption::VALUE_NONE, 'Use NelmioApiDocBundle to document the controller'),
-                new InputOption('target-bundle', '', InputOption::VALUE_NONE, 'The bundle where rest controller will be generated'),
+                new InputOption('target-bundle', '', InputOption::VALUE_OPTIONAL, 'The bundle where rest controller will be generated'),
             )
         )
             ->setDescription('Generates a REST api based on a Doctrine entity')
