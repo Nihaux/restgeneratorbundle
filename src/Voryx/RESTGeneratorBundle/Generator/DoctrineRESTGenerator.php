@@ -162,7 +162,7 @@ class DoctrineRESTGenerator extends Generator
                 'entity'            => $this->entity,
                 'entity_class'      => $entityClass,
                 'namespace'         => $this->targetBundle->getNamespace(),
-                'entity_namespace'  => $entityNamespace,
+                'entity_namespace'  => $this->bundle->getNamespace(),
                 'format'            => $this->format,
             )
         );

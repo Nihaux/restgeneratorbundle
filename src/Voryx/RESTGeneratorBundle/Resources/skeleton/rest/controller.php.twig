@@ -4,7 +4,7 @@ namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespac
 
 {% block use_statements %}
 use {{ entity_namespace }}\Entity\{{ entity }};
-use {{ namespace }}\Form\{{ entity }}Type;
+use {{ entity_namespace }}\Form\{{ entity }}Type;
 
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
