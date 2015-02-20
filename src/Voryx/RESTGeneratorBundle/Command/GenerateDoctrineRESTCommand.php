@@ -87,8 +87,8 @@ EOT
         }
 
         $entity = Validators::validateEntityName($input->getOption('entity'));
-        list($bundle, $entity) = $this->parseShortcutNotation($entity);
-        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundle);
+        list($bundleName, $entity) = $this->parseShortcutNotation($entity);
+        $bundle      = $this->getContainer()->get('kernel')->getBundle($bundleName);
 
         $targetBundle = $bundle;
         $targetBundleOption = $input->getOption('target-bundle');
@@ -102,13 +102,13 @@ EOT
 
         $questionHelper->writeSection($output, 'REST api generation');
 
-        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundle) . '\\' . $entity;
+        $entityClass = $this->getContainer()->get('doctrine')->getAliasNamespace($bundleName) . '\\' . $entity;
         $metadata    = $this->getEntityMetadata($entityClass);
         $resource    = $input->getOption('resource');
         $document    = $input->getOption('document');
 
         $generator = $this->getGenerator($targetBundle);
-        $generator->generate($bundle, $entity, $metadata[0], $prefix, $forceOverwrite, $resource, $document, $targetBundle);
+        $generator->generate($bundle, $entity, $metadata[0], $prefix, $forceOverwrite, $targetBundle, $resource, $document);
 
         $output->writeln('Generating the REST api code: <info>OK</info>');
 
